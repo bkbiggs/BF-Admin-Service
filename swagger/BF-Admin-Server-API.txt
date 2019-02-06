@@ -1,0 +1,592 @@
+openapi: 3.0.0
+# Added by API Auto Mocking Plugin
+servers:
+# Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/bkbiggs/BF-Admin-Server/1.0.1
+    # url: http://10.0.1.14/updateDescription
+info:
+  description: |
+    'This is a collection of simple APIs used to manage the data elements stored from our Bird Feeder. The API's represent
+    CRUD operations for<br>
+    &ensp; birdData - information about a user of the feeder<br>
+    &ensp; imageData - details about each picture that is logged<br>
+    &ensp; linkData - an key reference to tell me what birds are on a picture, or what pictures a bird appears in.<br>'
+  version: "1.0.2"
+  title: BF Admin Server
+  contact:
+    email: bkbiggs@aol.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  # - name: admins
+  #   description: Secured Admin-only calls
+  - name: admin
+    description: Operations available to BF administrators
+  - name: user
+    description: Operations available to any client UI
+paths:
+  /createBirdData:
+    get:
+      tags:
+        - admin
+      summary: Create new BirdData element, assuming it does not already exist.
+      operationId: createBirdData
+      description: |
+        Create a new entry in the system if it does not already exist (by scientific name). Otherwise, if there are any changes they should be done through updateBirdData.
+      parameters:
+        - in: query
+          name: comName
+          description: |
+            Common name for this bird.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: sciName
+          description: |
+            Scientific name for this bird. We use this field for uniqueness.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: webData
+          description: |
+            Online data reference for this bird.
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: webImage
+          description: |
+            Online picture of this particular bird.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Create BirdData response.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "OK"
+        '400':
+          description: Bad input parameter.
+  /updateBirdData:
+    get:
+      tags:
+        - admin
+      summary: Update contents in existing BirdData element.
+      operationId: updateBirdData
+      description: |
+        Update an entry in the system based on the id. Remaining parameters are optional, if present will be used to either delete (null) or replace ("") the existing data value.
+      parameters:
+        - in: query
+          name: id
+          description: |
+            Bird data id from dbms.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: comName
+          description: |
+            Common name for this bird.
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: sciName
+          description: |
+            Scientific name for this bird. We use this field for uniqueness.
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: webData
+          description: |
+            Online data reference for this bird.
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: webImage
+          description: |
+            Online picture of this particular bird.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Update BirdData response.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "OK"
+        '400':
+          description: Bad input parameter.
+  /deleteBirdData:
+    get:
+      tags:
+        - admin
+      summary: Delete an existing BirdData element.
+      operationId: deleteBirdData
+      description: |
+        Delete an entry in the system based on the id. 
+      parameters:
+        - in: query
+          name: id
+          description: |
+            Bird data id from dbms.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Delete BirdData response.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "OK"
+        '400':
+          description: Bad input parameter.
+  /getBirdData:
+    get:
+      tags:
+        - admin
+        - user
+      summary: Return the list of available Bird information from our context.
+      operationId: getBirdData
+      description: |
+        By passing in the appropriate options, you can search for
+        available inventory in the system
+      parameters:
+        - in: query
+          name: id
+          description: |
+            - without any arguments all entries are returned
+            - otherwise only one entry is returned.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get BirdData response.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BirdData'
+        '400':
+          description: Bad input parameter.
+  /createLinkData:
+    get:
+      tags:
+        - admin
+      summary: Create new link element, assuming it does not already exist.
+      operationId: createLinkData
+      description: |
+        Show a connection between a birdData element and an imageData element. These links allow searching for all images a bird appears in - or all birds that appear in an image.
+      parameters:
+        - in: query
+          name: birdId
+          description: |
+            Data id for the "bird".
+          required: true
+          schema:
+            type: string
+            format: int
+            example: '1'
+        - in: query
+          name: imageId
+          description: |
+            Data id for the "image".
+          required: true
+          schema:
+            type: string
+            format: int
+            example: '1'
+      responses:
+        '200':
+          description: Create LinkData response.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "OK"
+        '400':
+          description: Bad input parameter.
+  /deleteLinkData:
+    get:
+      tags:
+        - admin
+      summary: Delete an existing LinkData element.
+      operationId: deleteLinkData
+      description: |
+        Delete an entry in the system based on the id. 
+      parameters:
+        - in: query
+          name: id
+          description: |
+            Link data id from dbms.
+          required: true
+          schema:
+            type: string
+            format: int
+            example: '1'
+      responses:
+        '200':
+          description: Delete LinkData response.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "OK"
+        '400':
+          description: Bad input parameter.
+  /getLinkData:
+    get:
+      tags:
+        - admin
+        - user
+      summary: Return the list of available Bird information from our context.
+      operationId: getLinkData
+      description: |
+        By passing in the appropriate options, you can search for
+        available inventory in the system
+      parameters:
+        - in: query
+          name: birdId
+          description: |
+            - without any arguments all entries are returned
+            - otherwise only one entry is returned.
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: imageId
+          description: |
+            - without any arguments all entries are returned
+            - otherwise only one entry is returned.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get LinkData response.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LinkData'
+        '400':
+          description: Bad input parameter.
+  /createImageData:
+    get:
+      tags:
+        - admin
+      summary: Create new image element, assuming it does not already exist.
+      operationId: createImageData
+      description: |
+        Provide all the available descriptive information about the current image. The filename (which will be used to derive the location of both the icon and full image); the date/time the picture was taken; if the camera was inside the house or directly at the feeder; and the status of the picture<br>
+          - pending (still needs work)<br>
+          - display (available for general use)<br>
+          Also there is a lastUpdate flag to tell us when the last update to this context information was done.
+      parameters:
+        - in: query
+          name: filename
+          description: |
+            Source name for the image being used. 
+          required: true
+          schema:
+            type: string
+            format: int
+            example: 'image201901011012_pi15.jpg'
+        - in: query
+          name: sourceCamera
+          description: |
+            Which camera setup was used for this image.
+          required: true
+          schema:
+            type: string
+            format: int
+            example: 'outside'
+        - in: query
+          name: date
+          description: |
+            Date of the "image".
+          required: true
+          schema:
+            type: string
+            format: int
+            example: '2019-01-01'
+        - in: query
+          name: time
+          description: |
+            Time of the "image".
+          required: true
+          schema:
+            type: string
+            format: int
+            example: '10:12 AM'
+        - in: query
+          name: description
+          description: |
+            Text content for this "image".
+          required: false
+          schema:
+            type: string
+            format: text
+            example: 'who, what and ... huh?'
+        - in: query
+          name: lastUpdate
+          description: |
+            When the last update for this image occured.
+          required: false
+          schema:
+            type: string
+            format: int
+            example: '20190201EST1000'
+        - in: query
+          name: status
+          description: |
+            Either <em>pending</em> (still needs work) or <em>display</em> (ready for use).
+          required: true
+          schema:
+            type: string
+            example: 'pending'
+      responses:
+        '200':
+          description: Create LinkData response.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "OK"
+        '400':
+          description: Bad input parameter.
+  /updateImageData:
+    get:
+      tags:
+        - admin
+      summary: Create new image element, assuming it does not already exist.
+      operationId: createImageData
+      description: |
+        Provide all the available descriptive information about the current image. The filename (which will be used to derive the location of both the icon and full image); the date/time the picture was taken; if the camera was inside the house or directly at the feeder; and the status of the picture<br>
+          - pending (still needs work)<br>
+          - display (available for general use)<br>
+          Also there is a lastUpdate flag to tell us when the last update to this context information was done.
+      parameters:
+        - in: query
+          name: filename
+          description: |
+            Source name for the image being used. 
+          required: false
+          schema:
+            type: string
+            format: int
+            example: 'image201901011012_pi15.jpg'
+        - in: query
+          name: sourceCamera
+          description: |
+            Which camera setup was used for this image.
+          required: false
+          schema:
+            type: string
+            format: int
+            example: 'outside'
+        - in: query
+          name: date
+          description: |
+            Date of the "image".
+          required: false
+          schema:
+            type: string
+            format: int
+            example: '2019-01-01'
+        - in: query
+          name: time
+          description: |
+            Time of the "image".
+          required: false
+          schema:
+            type: string
+            format: int
+            example: '10:12 AM'
+        - in: query
+          name: description
+          description: |
+            Text content for this "image".
+          required: false
+          schema:
+            type: string
+            format: text
+            example: 'who, what and ... huh?'
+        - in: query
+          name: lastUpdate
+          description: |
+            When the last update for this image occured.
+          required: false
+          schema:
+            type: string
+            format: int
+            example: '20190201EST1000'
+        - in: query
+          name: status
+          description: |
+            Either <em>pending</em> (still needs work) or <em>display</em> (ready for use).
+          required: false
+          schema:
+            type: string
+            example: 'pending'
+      responses:
+        '200':
+          description: Update ImageData response.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "OK"
+        '400':
+          description: Bad input parameter. 
+  /deleteImageData:
+    get:
+      tags:
+        - admin
+      summary: Return one or all of the list of available Image information from our context.
+      operationId: deleteImageData
+      description: |
+        Pass in a single imageId optionally. If present, response will be the image that is found. If no imageId is used, all the entries in the ImageData content will be returned.
+      parameters:
+        - in: query
+          name: id
+          description: |
+            - without any arguments all entries are returned
+            - otherwise only one entry is returned.
+          required: false
+          schema:
+            type: string
+            format: int
+            example: '1'
+      responses:
+        '200':
+          description: Delete ImageData response.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: 'OK'
+        '400':
+          description: Bad input parameter.
+  /getImageData:
+    get:
+      tags:
+        - admin
+        - user
+      summary: Return one or all of the list of available Image information from our context.
+      operationId: getImageData
+      description: |
+        Pass in a single imageId optionally. If present, response will be the image that is found. If no imageId is used, all the entries in the ImageData content will be returned.
+      parameters:
+        - in: query
+          name: id
+          description: |
+            - without any arguments all entries are returned
+            - otherwise only one entry is returned.
+          required: false
+          schema:
+            type: string
+            format: int
+            example: '1'
+      responses:
+        '200':
+          description: Get LinkData response.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ImageData'
+        '400':
+          description: Bad input parameter.
+components:
+  schemas:
+    ImageData:
+      type: object
+      required: 
+        - filename
+      properties:
+        id:
+          type: string
+          example: '1'
+        filename:
+          type: string
+          example: 'image201607011007_pi15.jpg'
+        sourceCamera:
+          type: string
+          example: 'outside'
+        date:
+          type: string
+          format: date
+          example: '2016-07-01'
+        time:
+          type: string
+          format: time
+          example: '10:07 AM'
+        description:
+          type: string
+          example: 'birds, animals, whatever show up ...'
+        lastUpdate:
+          type: string
+          format: datetime
+          example: ''
+        status:
+          type: string
+          example: 'pending | display'
+    LinkData:
+      type: object
+      required:
+        - birdId
+        - imageId
+      properties:
+        id:
+          type: string
+          format: int
+          example: 1
+        birdId:
+          type: string
+          format: int
+          example: 1
+        imageId:
+          type: string
+          format: int
+          example: 1
+    BirdData:
+      type: object
+      required:
+        - id
+        - commonName
+        - scientificName
+      properties:
+        id:
+          type: string
+          format: int
+          example: 1
+        commonName:
+          type: string
+          example: 'Blue Bird'
+        scientificName:
+          type: string
+          example: 'Sialia sialis'
+        webData:
+          type: string
+          example: 'https://en.wikipedia.org/wiki/Bluebird'
+        webImage:
+          type: string
+          example: 'https://en.wikipedia.org/wiki/File:Eastern_Bluebird.jpg'
