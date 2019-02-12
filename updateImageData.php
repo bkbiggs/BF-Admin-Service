@@ -7,6 +7,9 @@ $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$servername;dbname=$db;charset=$charset";
 
+
+header("Access-Control-Allow-Origin: *");
+
 $opt = [
 	PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 	PDO::ATTR_AUTOCOMMIT => false,
@@ -29,7 +32,7 @@ $filename=$_REQUEST["filename"];
 $camera=$_REQUEST["camera"];
 $date=$_REQUEST["date"];
 $time = $_REQUEST["time"];
-$description = $_REQUEST["status"];
+$desc = $_REQUEST["desc"];
 $lastUpdate = $_REQUEST["lastUpdate"];
 $status = $_REQUEST["status"];
 
@@ -38,20 +41,15 @@ $sql = "UPDATE `mydb`.`birdPicture` SET `filename` = '$filename', `sourceCamera`
 `time` = '$time', `description` = '$desc', `lastUpdate` = '$lastUpdate', 
 `status` = '$status' WHERE `id` = '$id';";
 
-
 try {
-    echo $sql."\n";
+    // echo "<!-- ".$sql." -->\n";
     $result = $conn->query( $sql );
 }
 catch(PDOException $e) {
     die('Could not get data: ' . $e->getMessage());
 }
 
-$conn->close();
-
-// echo ($outp);
-?>
-
-   $conn = null;
+// $conn->close();
+$conn = null;
 
 ?>

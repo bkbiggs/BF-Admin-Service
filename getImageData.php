@@ -10,6 +10,8 @@ $password = 'gally4';
 // default entry would mean "all" entries
 $id = (isset($_REQUEST['id'])) ? $_REQUEST['id'] : '';
 
+header("Access-Control-Allow-Origin: *");
+
 try {
     $conn = new mysqli($server, $username, $password, $db );
 }

@@ -28,9 +28,9 @@ VALUES
 
 
 try {
-    echo $sql."\n";
+    // echo $sql."\n";
     $result = $conn->query( $sql );
-    echo $result."\n";
+    // echo $result."\n";
 }
 catch(PDOException $e) {
     die('Could not add entry: ' . $e->getMessage());
